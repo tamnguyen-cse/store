@@ -1,0 +1,30 @@
+spring:
+  application:
+    name: configuration
+  profiles:
+    active: native
+  cloud:
+    config:
+      server:
+        # use cloud for storing configuration files
+#        git:
+#          uri: https://github.com/supertappo/backend-configuration.git
+#          search-paths: startup-configs
+#          username: username
+#          password: password
+#          clone-on-start: true
+        # use local for storing configuration files
+        native:
+          search-locations:
+          - /opt/supertappo/startup-configs
+
+eureka:
+  client:
+    serviceUrl:
+      defaultZone: http://localhost:8761/eureka/
+
+info:
+  component: Configuration Server
+
+server:
+  port: 8888
