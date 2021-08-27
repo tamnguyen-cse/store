@@ -26,8 +26,6 @@ eureka:
       defaultZone: http://${EUREKA_IP_ADDRESS}:8761/eureka/
   instance:
     prefer-ip-address: true
-    ip-address: ${ECS_INSTANCE_IP_ADDRESS}
-    non-secure-port: ${ECS_TASK_NON_SECURE_INSTANCE_PORT}
 
 info:
   component: Configuration Server
