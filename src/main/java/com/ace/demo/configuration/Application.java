@@ -1,6 +1,10 @@
 package com.ace.demo.configuration;
 
+import java.net.InetAddress;
+import java.net.UnknownHostException;
 import org.json.JSONObject;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -16,7 +20,7 @@ import org.springframework.web.client.RestTemplate;
 @SpringBootApplication
 public class Application {
 
-    // private static final Logger logger = LoggerFactory.getLogger(Application.class);
+    private static final Logger logger = LoggerFactory.getLogger(Application.class);
 
     public static void main(String[] args) {
         SpringApplication.run(Application.class, args);
@@ -34,22 +38,25 @@ public class Application {
     @Primary
     public EurekaInstanceConfigBean eurekaInstanceConfig(InetUtils inetUtils) {
         EurekaInstanceConfigBean config = new EurekaInstanceConfigBean(inetUtils);
-        String ip = null;
-        // try {
-        // ip = InetAddress.getLocalHost().getHostAddress();
-        // } catch (UnknownHostException e) {
-        // logger.error("Exception: {}", e);
+        String publicIp = null;
+        String privateIp = null;
+        try {
+            privateIp = InetAddress.getLocalHost().getHostAddress();
+        } catch (UnknownHostException e) {
+            logger.error("Exception: {}", e);
+        }
         RestTemplate restTemplate = new RestTemplate();
         ResponseEntity<String> response = restTemplate.getForEntity(PUBLIC_IP_URL, String.class);
         if (response.getStatusCode().is2xxSuccessful()) {
             JSONObject json = new JSONObject(response.getBody());
             if (json.has(PUBLIC_IP))
-                ip = json.getString(PUBLIC_IP);
+                publicIp = json.getString(PUBLIC_IP);
 
         }
-        config.setIpAddress(ip);
+        config.setIpAddress(privateIp);
         config.setNonSecurePort(port);
         config.setPreferIpAddress(true);
+        config.getMetadataMap().put(PUBLIC_IP, publicIp);
         return config;
     }
 
