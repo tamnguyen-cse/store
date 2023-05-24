@@ -1,34 +1,88 @@
+server:
+  port: ${PORT}
+
 spring:
   application:
-    name: configuration
+    name: store
   profiles:
-    active: native
+    active: ${STAGE}
+  jpa:
+    hibernate:
+      ddl-auto: update
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.MySQL8Dialect
+        jdbc:
+          lob:
+            non_contextual_creation: true
+    show-sql: false
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    idle:
+      timeout: 10000
+    minimum:
+      idle: 1
+    connection:
+      timeout: 60000
+    maximum:
+      pool:
+        size: 5
+    url: ${DATABASE_HOST}
+    username: ${DATABASE_USERNAME}
+    password: ${DATABASE_PASSWORD}
   cloud:
-    config:
-      server:
-        # use cloud for storing configuration files
-#        git:
-#          uri: https://github.com/supertappo/backend-configuration.git
-#          search-paths: startup-configs
-#          username: username
-#          password: password
-#          clone-on-start: true
-        # use local for storing configuration files
-        native:
-          search-locations:
-          - /opt/supertappo/startup-configs
+    stream:
+      kafka:
+        binder:
+          brokers: ${KAFKA_BASE_URL}
+      bindings:
+        # output channels
+        send-message-output:
+          destination: send-message
 
-eureka:
+management:
+  endpoint:
+    refresh:
+      enabled: true
+  endpoints:
+    web:
+      exposure:
+        include: hystrix.stream
+
+feign:
   client:
-    register-with-eureka: true
-    fetch-registry: true
-    service-url:
-      defaultZone: http://${EUREKA_HOST}:8761/eureka/
-  instance:
-    prefer-ip-address: true
+    config:
+      default:
+        readTimeout: 60000
+        connectTimeout: 60000
 
-info:
-  component: Configuration Server
+logging:
+  config: classpath:logback/logback.xml
+  level:
+    org:
+      springframework.web: info
+    com.demo: debug
+    net.sf.ehcache: error
 
-server:
-  port: 8888
+
+#Custom configuration
+base:
+  directory: classpath:config/
+
+auth:
+  jwt:
+    issuer: http://sample.com
+    secret-key: ${JWT_SECRET}
+
+encryptor:
+  secret-key: ${ENC_SECRET}
+
+aws:
+  s3:
+    region: ${AWS_REGION}
+    bucket: ${AWS_S3_BUCKET}
+    credentials:
+      access-key-id: ${AWS_S3_ACCESS_ID}
+      secret-access-key: ${AWS_S3_SECRET_KEY}
+    presigned-url:
+      duration: 3600
