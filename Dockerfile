@@ -1,6 +1,6 @@
-FROM openjdk:8-jdk-alpine
+FROM openjdk:17-oracle
 VOLUME /tmp
-ARG EUREKA_IP_ADDRESS
-ENV EUREKA_HOST=$EUREKA_IP_ADDRESS
+ARG PORT
+ENV PORT=$PORT
 COPY build/libs/*.jar app.jar
 ENTRYPOINT ["java","-jar","/app.jar"]
