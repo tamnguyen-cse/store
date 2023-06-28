@@ -9,7 +9,7 @@
         "logDriver": "awslogs",
         "secretOptions": null,
         "options": {
-          "awslogs-group": "/ecs/config-to-fargate",
+          "awslogs-group": "/ecs/store-to-fargate",
           "awslogs-region": "ap-southeast-1",
           "awslogs-stream-prefix": "ecs"
         }
@@ -42,7 +42,7 @@
       "memoryReservation": 128,
       "volumesFrom": [],
       "stopTimeout": null,
-      "image": "586422557502.dkr.ecr.ap-southeast-1.amazonaws.com/configuration",
+      "image": "586422557502.dkr.ecr.ap-southeast-1.amazonaws.com/store",
       "startTimeout": null,
       "firelensConfiguration": null,
       "dependsOn": null,
@@ -69,8 +69,8 @@
     "EC2",
     "FARGATE"
   ],
-  "taskDefinitionArn": "arn:aws:ecs:ap-southeast-1:586422557502:task-definition/config-to-fargate:1",
-  "family": "config-to-fargate",
+  "taskDefinitionArn": "arn:aws:ecs:ap-southeast-1:586422557502:task-definition/store-to-fargate:1",
+  "family": "store-to-fargate",
   "requiresAttributes": [
     {
       "targetId": null,
