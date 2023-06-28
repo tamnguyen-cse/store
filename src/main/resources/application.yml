@@ -5,40 +5,7 @@ spring:
   application:
     name: store
   profiles:
-    active: ${STAGE}
-  jpa:
-    hibernate:
-      ddl-auto: update
-    properties:
-      hibernate:
-        dialect: org.hibernate.dialect.MySQL8Dialect
-        jdbc:
-          lob:
-            non_contextual_creation: true
-    show-sql: false
-  datasource:
-    driver-class-name: com.mysql.cj.jdbc.Driver
-    idle:
-      timeout: 10000
-    minimum:
-      idle: 1
-    connection:
-      timeout: 60000
-    maximum:
-      pool:
-        size: 5
-    url: ${DATABASE_HOST}
-    username: ${DATABASE_USERNAME}
-    password: ${DATABASE_PASSWORD}
-  cloud:
-    stream:
-      kafka:
-        binder:
-          brokers: ${KAFKA_BASE_URL}
-      bindings:
-        # output channels
-        send-message-output:
-          destination: send-message
+    active: local
 
 management:
   endpoint:
@@ -56,14 +23,6 @@ feign:
         readTimeout: 60000
         connectTimeout: 60000
 
-logging:
-  config: classpath:logback/logback.xml
-  level:
-    org:
-      springframework.web: info
-    com.demo: debug
-    net.sf.ehcache: error
-
 
 #Custom configuration
 base:
@@ -72,17 +31,5 @@ base:
 auth:
   jwt:
     issuer: http://sample.com
-    secret-key: ${JWT_SECRET}
+    secret-key: abc123
 
-encryptor:
-  secret-key: ${ENC_SECRET}
-
-aws:
-  s3:
-    region: ${AWS_REGION}
-    bucket: ${AWS_S3_BUCKET}
-    credentials:
-      access-key-id: ${AWS_S3_ACCESS_ID}
-      secret-access-key: ${AWS_S3_SECRET_KEY}
-    presigned-url:
-      duration: 3600

@@ -4,12 +4,14 @@ import com.demo.store.error.Error;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ResponseStatus;
 
 @Data
 @Builder
 @AllArgsConstructor
+@EqualsAndHashCode(callSuper = false)
 @ResponseStatus(HttpStatus.UNAUTHORIZED)
 public class UnauthorizedException extends RuntimeException {
 

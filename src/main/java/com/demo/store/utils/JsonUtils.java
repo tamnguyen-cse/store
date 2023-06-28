@@ -9,7 +9,6 @@ import com.fasterxml.jackson.databind.node.TextNode;
 import java.io.IOException;
 import java.lang.reflect.Field;
 import java.util.Map;
-import org.springframework.util.StringUtils;
 
 public class JsonUtils {
 
@@ -31,15 +30,13 @@ public class JsonUtils {
      * @return true: JSON object / false: not JSON object
      */
     public static boolean isJsonValid(String json) {
-        boolean result = false;
         try {
             final ObjectMapper objectMapper = new ObjectMapper();
             objectMapper.readTree(json);
-            result = true;
+            return true;
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
-        return result;
     }
 
     /**
@@ -58,14 +55,12 @@ public class JsonUtils {
             return (T) json;
         }
 
-        T object = null;
         try {
             // Read string to object
-            object = (T) mapper.readValue(json, clazz);
+            return mapper.readValue(json, clazz);
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
-        return object;
     }
 
     /**
@@ -118,7 +113,7 @@ public class JsonUtils {
     /**
      * Convert JSON to object.
      *
-     * @param jsonData      the JSON data
+     * @param json          the JSON data
      * @param typeReference the type reference
      * @return the object
      */
@@ -126,14 +121,12 @@ public class JsonUtils {
         if (StringUtils.isEmpty(json)) {
             return null;
         }
-        T object = null;
         try {
             // read JSON to object
-            object = (T) mapper.readValue(json, typeReference);
+            return mapper.readValue(json, typeReference);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
-        return object;
     }
 
     /**
@@ -153,20 +146,18 @@ public class JsonUtils {
             return ((TextNode) object).asText();
         }
 
-        String json = null;
         try {
             // Write object to string
-            json = mapper.writeValueAsString(object);
+            return mapper.writeValueAsString(object);
         } catch (JsonProcessingException e) {
             throw new RuntimeException(e);
         }
-        return json;
     }
 
     /**
      * Get the compact form of pretty-printed JSON data (remove tab, space, break line, ...)
      *
-     * @param jsonData the JSON data
+     * @param json the JSON data
      * @return the string
      */
     public static String trimJsonData(String json) {
@@ -174,15 +165,13 @@ public class JsonUtils {
             return null;
         }
 
-        String trimmingJson = json;
         JsonNode df;
         try {
             df = mapper.readValue(json, JsonNode.class);
-            trimmingJson = df.toString();
+            return df.toString();
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
-        return trimmingJson;
     }
 
     /**
@@ -193,15 +182,13 @@ public class JsonUtils {
      * @return value string. Return null if this field is array or object
      */
     public static String getFieldFromObject(Object objectBase, String fieldName) {
-        String value = null;
         try {
             Field field = objectBase.getClass().getDeclaredField(fieldName);
             field.setAccessible(true);
-            value = field.get(objectBase).toString();
+            return field.get(objectBase).toString();
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
-        return value;
     }
 
 }

@@ -4,7 +4,7 @@ import com.demo.store.common.Constant.Symbol;
 import java.text.Normalizer;
 import java.util.Random;
 import java.util.UUID;
-import org.apache.commons.lang.RandomStringUtils;
+import org.apache.commons.lang3.RandomStringUtils;
 
 public class StringUtils {
 
@@ -12,7 +12,7 @@ public class StringUtils {
     }
 
     /**
-     * Check if string is empty ll
+     * Check if string is empty
      *
      * @param input: the input string
      * @return boolean.
