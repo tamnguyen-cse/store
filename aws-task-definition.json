@@ -40,7 +40,29 @@
   "networkMode": "awsvpc",
   "proxyConfiguration": {
     "type": "APPMESH",
-    "containerName": "store-container"
+    "containerName": "store-container",
+    "properties": [
+      {
+        "name": "IgnoredUID",
+        "value": "1337"
+      },
+      {
+        "name": "ProxyIngressPort",
+        "value": "15000"
+      },
+      {
+        "name": "ProxyEgressPort",
+        "value": "15001"
+      },
+      {
+        "name": "AppPorts",
+        "value": "8080"
+      },
+      {
+        "name": "EgressIgnoredIPs",
+        "value": ""
+      }
+    ]
   },
   "runtimePlatform": {
     "cpuArchitecture": "ARM64",
