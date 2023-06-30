@@ -40,13 +40,7 @@
   "networkMode": "awsvpc",
   "proxyConfiguration": {
     "type": "APPMESH",
-    "containerName": "store-container",
-    "properties": [
-      {
-        "name": "",
-        "value": ""
-      }
-    ]
+    "containerName": "store-container"
   },
   "runtimePlatform": {
     "cpuArchitecture": "ARM64",
