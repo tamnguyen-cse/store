@@ -1,20 +1,31 @@
 server:
-  port: ${PORT}
+  port: ${PORT:8080}
 
 spring:
   application:
-    name: store
-  profiles:
-    active: local
+    name: ${APP:store}
+  mvc:
+    throw-exception-if-no-handler-found: true
+  web:
+    resources:
+      add-mappings: false
+  jpa:
+    hibernate:
+      ddl-auto: update
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.MySQLDialect
+    show-sql: true
+  datasource:
+    url: ${DATABASE_HOST}
+    username: ${DATABASE_USERNAME}
+    password: ${DATABASE_PASSWORD}
 
 management:
-  endpoint:
-    refresh:
-      enabled: true
   endpoints:
     web:
       exposure:
-        include: hystrix.stream
+        include: '*'
 
 feign:
   client:

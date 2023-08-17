@@ -1,9 +1,11 @@
 package com.demo.store.utils;
 
-import com.demo.store.common.Constant.Symbol;
+import static com.demo.store.common.Constant.Symbol.HYPHEN;
+import static com.demo.store.common.Constant.Symbol.SPACE;
+
 import java.text.Normalizer;
-import java.util.Random;
-import java.util.UUID;
+import java.text.Normalizer.Form;
+import java.util.Objects;
 import org.apache.commons.lang3.RandomStringUtils;
 
 public class StringUtils {
@@ -32,37 +34,47 @@ public class StringUtils {
     }
 
     /**
+     * Generate a random string with letters and numbers only based on length.
+     *
+     * @param length the length of the random string
+     * @return the random string
+     */
+    public static String random(int length) {
+        boolean useLetters = true;
+        boolean useNumbers = true;
+        return RandomStringUtils.random(length, useLetters, useNumbers);
+    }
+
+    /**
      * Normalize string
      *
-     * @param input: the input string
+     * @param input: the input raw string
      * @return normalized string.
      */
     public static String normalize(String input) {
-        if (!Normalizer.isNormalized(input, Normalizer.Form.NFC)) {
-            return Normalizer.normalize(input, Normalizer.Form.NFC);
-        }
-        return input;
+        return Normalizer.isNormalized(input, Form.NFC) ? input
+            : Normalizer.normalize(input, Form.NFC);
     }
 
     /**
-     * Normalize string value
+     * Standardize string: normalize, trim and remove all consecutive spaces.
+     *
+     * @param input: the input raw string
+     * @return parsed string.
+     */
+    public static String standardize(String input) {
+        return isEmpty(input) ? null : normalize(input).trim().replaceAll("\\s+", SPACE);
+    }
+
+    /**
+     * Simplify string: normalize, standardize and remove all special characters.
      *
      * @param input: the input string that need to be parsed.
      * @return parsed string.
      */
-    public static String normalizeString(String input) {
-        return isEmpty(input) ? null : input.trim().replaceAll("\\s+", Symbol.SPACE);
-    }
-
-    /**
-     * Parse to string URL
-     *
-     * @param input: the input string that need to be parsed.
-     * @return parsed string.
-     */
-    public static String parseToUrlString(String input) {
-        return isEmpty(input) ? null : normalize(input).replaceAll("[^a-zA-Z0-9\\s]", "").trim()
-                .replaceAll("\\s+", Symbol.SPACE).replaceAll("\\s", Symbol.HYPHEN);
+    public static String simplify(String input) {
+        return isEmpty(input) ? null
+            : standardize(normalize(input.replaceAll("[^a-zA-Z0-9\\s]", "")));
     }
 
     /**
@@ -71,44 +83,9 @@ public class StringUtils {
      * @param input: the input string that need to be parsed.
      * @return parsed string.
      */
-    public static String parseToSlug(String input) {
-        input = isEmpty(input) ? null : input.replace(Symbol.HYPHEN, Symbol.SPACE);
-        return parseToUrlString(input).toLowerCase();
-    }
-
-    /**
-     * Generate a random string with letters and numbers only base on length.
-     *
-     * @param length the length of random string
-     * @return the random string
-     */
-    public static String randomString(int length) {
-        boolean useLetters = true;
-        boolean useNumbers = true;
-        return RandomStringUtils.random(length, useLetters, useNumbers);
-    }
-
-    /**
-     * Generate OTP code.
-     *
-     * @return the string OTP code
-     */
-    public static String generateOTP() {
-        Random rnd = new Random();
-        int randomOTP = rnd.nextInt(999999);
-        return String.format("%06d", randomOTP);
-    }
-
-    /**
-     * Generate code that can be redeemed.
-     *
-     * @return the string OTP code
-     */
-    public static String generateCode() {
-        StringBuilder result = new StringBuilder();
-        String[] genAuto = UUID.randomUUID().toString().split(Symbol.HYPHEN);
-        result.append(genAuto[0]);
-        return result.toString().toUpperCase();
+    public static String parseNameToSlug(String input) {
+        input = isEmpty(input) ? null : input.replace(HYPHEN, SPACE);
+        return Objects.requireNonNull(simplify(input)).replaceAll("\\s", HYPHEN).toLowerCase();
     }
 
 }

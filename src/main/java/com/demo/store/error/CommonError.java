@@ -5,109 +5,101 @@ public enum CommonError implements Error {
     /**
      * No error occurred
      *
-     * @category 2xx
+     * @code 2xx
      */
     NO_ERROR("1000"),
-
     /**
      * Request body is missing
      *
-     * @category 400
+     * @code 400
      */
     MISSING_REQUEST_BODY("1001"),
-
     /**
      * Request header is missing
      *
-     * @category 400
+     * @code 400
      */
     MISSING_REQUEST_HEADER("1002"),
-
     /**
      * Request parameter is missing
      *
-     * @category 400
+     * @code 400
      */
-    MISSING_QUERY_PARAM("1003"),
-
+    MISSING_REQUEST_PARAM("1003"),
+    /**
+     * Path variable is missing
+     *
+     * @code 400
+     */
+    MISSING_PATH_VARIABLE("1004"),
+    /**
+     * Path variable is missing
+     *
+     * @code 400
+     */
+    MISSING_REQUEST_PART("1005"),
+    /**
+     * Method is not allowed
+     *
+     * @code 405
+     */
+    METHOD_NOT_ALLOWED("1006"),
     /**
      * Request body is invalid
      *
-     * @category 400
+     * @code 400
      */
-    INVALID_REQUEST_BODY("1004"),
-
+    INVALID_REQUEST_BODY("1007"),
     /**
      * Not found resource data
      *
-     * @category 404
+     * @code 404
      */
-    DATA_NOT_FOUND("1005"),
-
+    DATA_NOT_FOUND("1008"),
     /**
-     * Request data not matching with requirement
+     * Not found resource API
      *
-     * @category 400
+     * @code 404
      */
-    DATA_NOT_MATCH_REQUIREMENT("1006"),
-
-    /**
-     * Processing authentication error
-     *
-     * @category 403
-     */
-    DATA_PERMISSION_DENY("1007"),
-
-    /**
-     * Not found resource data
-     *
-     * @category 404
-     */
-    API_NOT_FOUND("1008"),
-
+    API_NOT_FOUND("1009"),
     /**
      * Resource with field(s) is(are) null
      *
-     * @param (0) the resource name
-     * @param (1) the field name
-     * @category 404
+     * @var (0) the resource name
+     * @var (1) the field name
+     * @code 404
      */
-    RESOURCE_NULL("1009"),
-
+    RESOURCE_NULL("1010"),
     /**
      * Not found data of the specified resource
      *
-     * @param (0) the resource name
-     * @param (1) the resource id
-     * @category 404
+     * @var (0) the resource name
+     * @var (1) the resource id
+     * @code 404
      */
-    RESOURCE_NOT_FOUND("1010"),
-
+    RESOURCE_NOT_FOUND("1011"),
     /**
      * Processing DB transaction error
      *
-     * @category 500
+     * @code 500
      */
     DB_OPERATION_ERROR("1996"),
-
     /**
      * Processing REST request/response error from internal system
      *
-     * @category 500
+     * @code 500
      */
     INTERNAL_REQUEST_ERROR("1997"),
-
     /**
      * Processing REST request/response error from external system
      *
-     * @category 500
+     * @code 500
      */
     EXTERNAL_REQUEST_ERROR("1998"),
-
     /**
      * Internal server error
      *
-     * @category 500
+     * @code 500
      */
     INTERNAL_SERVER_ERROR("1999");
 
@@ -116,10 +108,26 @@ public enum CommonError implements Error {
     /**
      * Instantiates a new client error.
      *
-     * @param code the error code
+     * @var code the error code
      */
-    private CommonError(String code) {
+    CommonError(String code) {
         this.code = code;
+    }
+
+    /**
+     * Get Error from error code.
+     *
+     * @return the error corresponds to input code`
+     * @var code the error code
+     */
+    public static CommonError fromCode(String code) {
+        CommonError[] errors = CommonError.values();
+        for (CommonError error : errors) {
+            if (error.getCode().equals(code)) {
+                return error;
+            }
+        }
+        return null;
     }
 
     /**
@@ -140,21 +148,5 @@ public enum CommonError implements Error {
     @Override
     public String getType() {
         return this.toString();
-    }
-
-    /**
-     * Get Error from error code.
-     *
-     * @param code the error code
-     * @return the error corresponds to input code`
-     */
-    public static CommonError fromCode(String code) {
-        CommonError[] errors = CommonError.values();
-        for (CommonError error : errors) {
-            if (error.getCode().equals(code)) {
-                return error;
-            }
-        }
-        return null;
     }
 }

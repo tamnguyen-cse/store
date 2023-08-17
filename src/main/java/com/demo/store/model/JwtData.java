@@ -12,9 +12,9 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @JsonInclude(value = Include.NON_NULL)
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class JwtInfo {
+public class JwtData {
 
-    private String userId;
+    private Long userId;
 
     private String type;
 

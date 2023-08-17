@@ -22,7 +22,7 @@ public class ErrorServiceImpl implements ErrorService {
     @Override
     public ErrorResponse getError(String path, Error error) {
         return ErrorResponse.builder().path(path).type(error.getType()).code(error.getCode())
-                .message(getMessage(error.getType())).build();
+            .message(getMessage(error.getType())).build();
     }
 
     @Override
@@ -32,9 +32,8 @@ public class ErrorServiceImpl implements ErrorService {
 
     @Override
     public ErrorResponse getErrorWithMessage(String path, String message, Error error) {
-        ErrorResponse response = ErrorResponse.builder().path(path).type(error.getType())
-                .code(error.getCode()).message(message).build();
-        return response;
+        return ErrorResponse.builder().path(path).type(error.getType())
+            .code(error.getCode()).message(message).build();
     }
 
     @Override
@@ -49,13 +48,13 @@ public class ErrorServiceImpl implements ErrorService {
 
     @Override
     public ErrorResponse getErrorWithParamsMessage(String messageKey, Error error,
-            Object... params) {
+        Object... params) {
         return getErrorWithMessage(null, getMessage(messageKey, params), error);
     }
 
     @Override
     public ErrorResponse getErrorWithParamsMessage(String path, String messageKey, Error error,
-            Object... params) {
+        Object... params) {
         return getErrorWithMessage(path, getMessage(messageKey, params), error);
     }
 

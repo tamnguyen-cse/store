@@ -5,7 +5,7 @@ public enum CustomError implements Error {
     /**
      * No default currency exists
      *
-     * @category 404
+     * @code 404
      */
     NO_DEFAULT_CURRENCY("1101");
 
@@ -16,8 +16,24 @@ public enum CustomError implements Error {
      *
      * @param code the error code
      */
-    private CustomError(String code) {
+    CustomError(String code) {
         this.code = code;
+    }
+
+    /**
+     * Get Error from error code.
+     *
+     * @param code the error code
+     * @return the error corresponds to input code`
+     */
+    public static CustomError fromCode(String code) {
+        CustomError[] errors = CustomError.values();
+        for (CustomError error : errors) {
+            if (error.getCode().equals(code)) {
+                return error;
+            }
+        }
+        return null;
     }
 
     /**
@@ -38,22 +54,6 @@ public enum CustomError implements Error {
     @Override
     public String getType() {
         return this.toString();
-    }
-
-    /**
-     * Get Error from error code.
-     *
-     * @param code the error code
-     * @return the error corresponds to input code`
-     */
-    public static CustomError fromCode(String code) {
-        CustomError[] errors = CustomError.values();
-        for (CustomError error : errors) {
-            if (error.getCode().equals(code)) {
-                return error;
-            }
-        }
-        return null;
     }
 
 }

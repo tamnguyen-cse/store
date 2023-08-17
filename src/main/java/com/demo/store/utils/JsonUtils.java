@@ -7,15 +7,11 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.TextNode;
 import java.io.IOException;
-import java.lang.reflect.Field;
 import java.util.Map;
 
 public class JsonUtils {
 
     private static final ObjectMapper mapper = new ObjectMapper();
-
-    private JsonUtils() {
-    }
 
     static {
         mapper.configure(DeserializationFeature.ACCEPT_SINGLE_VALUE_AS_ARRAY, true);
@@ -23,13 +19,16 @@ public class JsonUtils {
         mapper.findAndRegisterModules();
     }
 
+    private JsonUtils() {
+    }
+
     /**
-     * Check the JSON format of string
+     * Validate if the string is in correct JSON format.
      *
      * @param json String value
-     * @return true: JSON object / false: not JSON object
+     * @return true: JSON / false: not JSON
      */
-    public static boolean isJsonValid(String json) {
+    public static boolean isValid(String json) {
         try {
             final ObjectMapper objectMapper = new ObjectMapper();
             objectMapper.readTree(json);
@@ -40,14 +39,14 @@ public class JsonUtils {
     }
 
     /**
-     * Convert Object From JSON.
+     * Convert JSON to specific object.
      *
      * @param json  the string
      * @param clazz the class
      * @return object
      */
     @SuppressWarnings("unchecked")
-    public static <T> T convertToObject(String json, Class<T> clazz) {
+    public static <T> T toObject(String json, Class<T> clazz) {
         if (StringUtils.isEmpty(json)) {
             return null;
         }
@@ -64,13 +63,43 @@ public class JsonUtils {
     }
 
     /**
+     * Convert map as object to specific object.
+     *
+     * @param object the object
+     * @param clazz  the DTO class
+     * @return the DTO object
+     */
+    public static <T> T toObject(Object object, Class<T> clazz) {
+        return mapper.convertValue(object, clazz);
+    }
+
+    /**
+     * Convert JSON to type reference object.
+     *
+     * @param json          the JSON data
+     * @param typeReference the type reference
+     * @return the object
+     */
+    public static <T> T toObject(String json, TypeReference<T> typeReference) {
+        if (StringUtils.isEmpty(json)) {
+            return null;
+        }
+        try {
+            // read JSON to object
+            return mapper.readValue(json, typeReference);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    /**
      * Convert the object to object map.
      *
      * @param object the object
      * @return the object map
      */
     @SuppressWarnings("unchecked")
-    public static Map<String, Object> convertToMap(Object object) {
+    public static Map<String, Object> toObjectMap(Object object) {
         if (object == null) {
             return null;
         }
@@ -88,7 +117,7 @@ public class JsonUtils {
      * @return the string map
      */
     @SuppressWarnings("unchecked")
-    public static Map<String, String> convertToStringMap(Object object) {
+    public static Map<String, String> toStringMap(Object object) {
         if (object == null) {
             return null;
         }
@@ -100,42 +129,12 @@ public class JsonUtils {
     }
 
     /**
-     * Convert the object map to DTO.
-     *
-     * @param object the object
-     * @param clazz  the DTO class
-     * @return the DTO object
-     */
-    public static <T> T convertObjectToDTO(Object object, Class<T> clazz) {
-        return mapper.convertValue(object, clazz);
-    }
-
-    /**
-     * Convert JSON to object.
-     *
-     * @param json          the JSON data
-     * @param typeReference the type reference
-     * @return the object
-     */
-    public static <T> T convertToObject(String json, TypeReference<T> typeReference) {
-        if (StringUtils.isEmpty(json)) {
-            return null;
-        }
-        try {
-            // read JSON to object
-            return mapper.readValue(json, typeReference);
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
-    }
-
-    /**
      * Convert the object to JSON.
      *
      * @param object the object
      * @return the JSON string
      */
-    public static String convertToJson(Object object) {
+    public static String toJson(Object object) {
         if (object == null) {
             return null;
         }
@@ -160,7 +159,7 @@ public class JsonUtils {
      * @param json the JSON data
      * @return the string
      */
-    public static String trimJsonData(String json) {
+    public static String trim(String json) {
         if (json == null) {
             return null;
         }
@@ -169,23 +168,6 @@ public class JsonUtils {
         try {
             df = mapper.readValue(json, JsonNode.class);
             return df.toString();
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
-    }
-
-    /**
-     * Get field from object base
-     *
-     * @param objectBase the object
-     * @param fieldName  the field name
-     * @return value string. Return null if this field is array or object
-     */
-    public static String getFieldFromObject(Object objectBase, String fieldName) {
-        try {
-            Field field = objectBase.getClass().getDeclaredField(fieldName);
-            field.setAccessible(true);
-            return field.get(objectBase).toString();
         } catch (Exception e) {
             throw new RuntimeException(e);
         }

@@ -19,9 +19,6 @@ public class ObjectUtils {
     private static final ModelMapper overrideMapper = new ModelMapper();
     private static final ModelMapper skipNullMapper = new ModelMapper();
 
-    private ObjectUtils() {
-    }
-
     static {
         // override model
         overrideMapper.getConfiguration().setMatchingStrategy(MatchingStrategies.STRICT);
@@ -35,7 +32,7 @@ public class ObjectUtils {
         skipNullMapper.getConfiguration().setFieldAccessLevel(AccessLevel.PRIVATE);
         skipNullMapper.getConfiguration().setCollectionsMergeEnabled(false);
         skipNullMapper.getConfiguration()
-                .setSourceNamingConvention(NamingConventions.JAVABEANS_MUTATOR);
+            .setSourceNamingConvention(NamingConventions.JAVABEANS_MUTATOR);
 
         Converter<List<Object>, List<Object>> listConverter = (MappingContext<List<Object>, List<Object>> context) -> {
             if (!CollectionUtils.isEmpty(context.getSource())) {
@@ -47,6 +44,9 @@ public class ObjectUtils {
         skipNullMapper.addConverter(listConverter);
     }
 
+    private ObjectUtils() {
+    }
+
     /**
      * Parse object to the type
      *
@@ -54,12 +54,11 @@ public class ObjectUtils {
      * @param type   the object type
      * @return object
      */
-    @SuppressWarnings("unchecked")
     public static <T> T parse(Object source, Type type) {
         if (source == null) {
             return null;
         }
-        return (T) overrideMapper.map(source, type);
+        return overrideMapper.map(source, type);
     }
 
     /**
@@ -74,7 +73,7 @@ public class ObjectUtils {
             return new ArrayList<>();
         }
         return source.stream().map(element -> overrideMapper.map(element, clazz))
-                .collect(Collectors.toList());
+            .collect(Collectors.toList());
     }
 
     /**

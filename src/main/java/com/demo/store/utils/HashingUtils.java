@@ -11,10 +11,10 @@ import org.apache.commons.codec.digest.HmacUtils;
 
 public class HashingUtils {
 
+    public final static Charset defaultCharset = StandardCharsets.UTF_8;
+
     private HashingUtils() {
     }
-
-    public final static Charset defaultCharset = StandardCharsets.UTF_8;
 
     /**
      * Hash from plain string to hashed string with hex encoding
@@ -32,7 +32,7 @@ public class HashingUtils {
      */
     public static String base64HashString(String value) {
         return Base64.getEncoder().encodeToString(DigestUtils.sha256(value))
-                .replaceAll("[^a-zA-Z0-9-]", "");
+            .replaceAll("[^a-zA-Z0-9-]", "");
     }
 
     /**
@@ -42,7 +42,7 @@ public class HashingUtils {
      */
     public static String hmac256String(String key, String value) {
         return String.valueOf(Hex.encodeHex(
-                hmac256Byte(key.getBytes(defaultCharset), value.getBytes(defaultCharset))));
+            hmac256Byte(key.getBytes(defaultCharset), value.getBytes(defaultCharset))));
     }
 
     /**
@@ -62,7 +62,7 @@ public class HashingUtils {
      */
     public static String hmac512String(String key, String value) {
         return String.valueOf(Hex.encodeHex(
-                hmac512Byte(key.getBytes(defaultCharset), value.getBytes(defaultCharset))));
+            hmac512Byte(key.getBytes(defaultCharset), value.getBytes(defaultCharset))));
     }
 
     /**

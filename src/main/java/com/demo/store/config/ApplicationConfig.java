@@ -3,7 +3,6 @@ package com.demo.store.config;
 import java.util.Locale;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.MessageSource;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -15,9 +14,6 @@ import org.springframework.web.servlet.i18n.SessionLocaleResolver;
 @Getter
 @Configuration
 public class ApplicationConfig {
-
-    @Value("${server.port}")
-    private int port;
 
     @Bean
     public MessageSource messageSource() {

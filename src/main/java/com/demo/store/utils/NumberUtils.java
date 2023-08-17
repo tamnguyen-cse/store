@@ -5,64 +5,21 @@ import java.math.RoundingMode;
 
 public class NumberUtils {
 
+    public final static RoundingMode ROUNDING_MODE = RoundingMode.UP;
+    public final static int RATE_SCALE = 3;
+    public final static int AMOUNT_SCALE = 2;
+    public final static BigDecimal HUNDRED = new BigDecimal(100);
+
     private NumberUtils() {
     }
 
-    public final static RoundingMode ROUNDING_MODE = RoundingMode.UP;
-    public final static int SCALE = 2;
-
     /**
-     * Sum 2 Integer Objects
+     * Random integer from 0 to max
      *
-     * @return the sum Integer
+     * @return the random integer
      */
-    public static Integer sumInteger(Integer a, Integer b) {
-        return Integer.valueOf(a.intValue() + b.intValue());
-    }
-
-    /**
-     * Subtract 2 Integer Objects
-     *
-     * @return the sum Integer
-     */
-    public static Integer subtractInteger(Integer a, Integer b) {
-        return Integer.valueOf(a.intValue() - b.intValue());
-    }
-
-    /**
-     * Multiply 2 Integer Objects
-     *
-     * @return the sum Integer
-     */
-    public static Integer multiplyInteger(Integer a, Integer b) {
-        return Integer.valueOf(a.intValue() * b.intValue());
-    }
-
-    /**
-     * Divide 2 Integer Objects
-     *
-     * @return the sum Integer
-     */
-    public static Integer divideInteger(Integer a, Integer b) {
-        return Integer.valueOf(a.intValue() / b.intValue());
-    }
-
-    /**
-     * Modulo 2 Integer Objects
-     *
-     * @return the sum Integer
-     */
-    public static Integer moduloInteger(Integer a, Integer b) {
-        return Integer.valueOf(a.intValue() % b.intValue());
-    }
-
-    /**
-     * Reverse integer from positive to negative and vice versa
-     *
-     * @return the reversed Integer
-     */
-    public static Integer reverseInteger(Integer a) {
-        return Integer.valueOf(a.intValue() * -1);
+    public static Integer randomInteger(int max) {
+        return (int) (Math.random() * max);
     }
 
     /**
@@ -81,7 +38,7 @@ public class NumberUtils {
      */
     public static BigDecimal newDecimal(String value) {
         BigDecimal result = new BigDecimal(value);
-        return scaleBigDecimal(result);
+        return scaleDecimal(result);
     }
 
     /**
@@ -89,8 +46,21 @@ public class NumberUtils {
      *
      * @return the sum BigDecimal
      */
-    public static BigDecimal scaleBigDecimal(BigDecimal value) {
-        return value.setScale(SCALE, ROUNDING_MODE);
+    public static BigDecimal scaleDecimal(BigDecimal value) {
+        return value.setScale(AMOUNT_SCALE, ROUNDING_MODE);
+    }
+
+    /**
+     * Divide two big decimal
+     *
+     * @return the sum BigDecimal
+     */
+    public static BigDecimal divideDecimal(BigDecimal a, BigDecimal b) {
+        return a.divide(b, AMOUNT_SCALE, ROUNDING_MODE);
+    }
+
+    public static BigDecimal divideDecimal(BigDecimal a, Integer b) {
+        return a.divide(new BigDecimal(b), AMOUNT_SCALE, ROUNDING_MODE);
     }
 
     /**
@@ -98,17 +68,26 @@ public class NumberUtils {
      *
      * @return true | false
      */
-    public static boolean isPositiveNumber(Integer number) {
+    public static boolean isPositive(Integer number) {
         return number != null && number >= 0;
     }
 
     /**
-     * Check the number is negative
+     * Convert a percentage to rate by divide 100
      *
-     * @return true | false
+     * @return the rate
      */
-    public static boolean isNegativeNumber(Integer number) {
-        return number != null && number <= 0;
+    public static BigDecimal toRate(BigDecimal percentage) {
+        return percentage.divide(HUNDRED, RATE_SCALE, ROUNDING_MODE);
+    }
+
+    /**
+     * Convert a rate to percentage by multiply 100
+     *
+     * @return the percentage
+     */
+    public static BigDecimal toPercentage(BigDecimal rate) {
+        return rate.multiply(HUNDRED);
     }
 
     /**
@@ -116,8 +95,8 @@ public class NumberUtils {
      *
      * @return string price
      */
-    public static String combinePrice(BigDecimal price, String currency) {
-        return currency + scaleBigDecimal(price);
+    public static String toPrice(BigDecimal value, String currency) {
+        return currency + scaleDecimal(value);
     }
 
 }
